@@ -401,6 +401,7 @@ let wrongCount = 0;
 let currentQuestion;
 let timer;
 let timeLeft = 30;
+let isRandomMode = false; // Track if random mode is active
 
 const questionDiv = document.getElementById("question");
 const optionsDiv = document.getElementById("options");
@@ -432,14 +433,16 @@ categoryBtns.forEach(btn => {
     categoryBtns.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     const category = btn.dataset.category;
+    isRandomMode = false; // category mode
     startQuiz(category);
   });
 });
 
 // Random Question Button Logic
 randomBtn.addEventListener("click", () => {
-  openFullscreen(); // Fullscreen on random click
+  openFullscreen(); 
   categoryBtns.forEach(b => b.classList.remove("active"));
+  isRandomMode = true; // enable random mode
   const randomIndex = Math.floor(Math.random() * questionsDB.length);
   const q = questionsDB[randomIndex];
   showQuestion(q);
@@ -549,8 +552,16 @@ function checkAnswer(selected, q) {
 
 // Next Button Logic
 nextBtn.addEventListener("click", () => {
-  const category = document.querySelector(".category-btn.active")?.dataset.category || questionsDB[0].category;
-  currentQuestion = getRandomQuestion(category);
-  showQuestion(currentQuestion);
+  if (isRandomMode) {
+    // Random mode: always pick random question
+    const randomIndex = Math.floor(Math.random() * questionsDB.length);
+    const q = questionsDB[randomIndex];
+    showQuestion(q);
+  } else {
+    // Category mode: pick random question from that category
+    const category = document.querySelector(".category-btn.active")?.dataset.category || questionsDB[0].category;
+    currentQuestion = getRandomQuestion(category);
+    showQuestion(currentQuestion);
+  }
 });
 
