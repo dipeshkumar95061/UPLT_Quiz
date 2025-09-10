@@ -403,6 +403,20 @@ let timer;
 let timeLeft = 30;
 let isRandomMode = false; // Track if random mode is active
 
+// High Score Load on Start
+let highScore = localStorage.getItem("highScore") || 0;
+document.getElementById("highscore").textContent = `🔥 Highest Score: ${highScore}`;
+
+// Update High Score function
+function updateHighScore() {
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("highScore", highScore);
+    document.getElementById("highscore").textContent = `🔥 Highest Score: ${highScore}`;
+  }
+}
+
+
 const questionDiv = document.getElementById("question");
 const optionsDiv = document.getElementById("options");
 const explanationDiv = document.getElementById("explanation");
@@ -548,6 +562,10 @@ function checkAnswer(selected, q) {
   scoreDiv.textContent = `Score: ${score}`;
   wrongDiv.textContent = `Wrong: ${wrongCount}`;
   nextBtn.style.display = "block";
+  
+   showShareButton();
+   updateHighScore();
+
 }
 
 // Next Button Logic
@@ -564,4 +582,36 @@ nextBtn.addEventListener("click", () => {
     showQuestion(currentQuestion);
   }
 });
+
+const shareBtn = document.getElementById("share-btn");
+
+// Show share button when quiz ends or user wants to share
+function showShareButton() {
+  shareBtn.classList.remove("hidden");
+}
+
+// Share Result Logic
+shareBtn.addEventListener("click", () => {
+  const total = score + wrongCount;
+  const resultText = `🎯 Digital Electronics Quiz UPLT Result\n
+✅ Score: ${score}\n❌ Wrong: ${wrongCount}\n📊 Total Questions: ${total}\n\nTry it yourself! https://uplt.netlify.app/`;
+
+  // WhatsApp share
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(resultText)}`;
+
+  // Twitter share
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(resultText)}`;
+
+  // Open option for user
+  const choice = confirm("Do you want to share on WhatsApp? (Cancel = Twitter)");
+  if (choice) {
+    window.open(whatsappUrl, "_blank");
+  } else {
+    window.open(twitterUrl, "_blank");
+  }
+});
+
+
+
+
 
