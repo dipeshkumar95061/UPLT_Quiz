@@ -472,7 +472,7 @@ function disableOptions() {
   });
 }
 
-// Show Question & Options
+// Show Question & Options with random shuffle
 function showQuestion(q) {
   clearInterval(timer);
   timeLeft = 30;
@@ -483,7 +483,14 @@ function showQuestion(q) {
   explanationDiv.textContent = "";
   nextBtn.style.display = "none";
 
-  q.options.forEach(opt => {
+  // Shuffle options randomly
+  const shuffledOptions = [...q.options];
+  for (let i = shuffledOptions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+  }
+
+  shuffledOptions.forEach(opt => {
     const button = document.createElement("button");
     button.textContent = opt;
     button.className = "w-full py-3 px-4 rounded-full bg-white shadow-[0_0_15px_rgba(0,0,0,0.2)] text-gray-700 font-medium hover:bg-blue-100 transition";
