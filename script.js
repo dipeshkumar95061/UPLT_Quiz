@@ -397,7 +397,7 @@ const questionsDB = [
 ];
 
 let score = 0;
-let wrongCount = 0; // <-- new
+let wrongCount = 0;
 let currentQuestion;
 let timer;
 let timeLeft = 30;
@@ -407,16 +407,29 @@ const optionsDiv = document.getElementById("options");
 const explanationDiv = document.getElementById("explanation");
 const nextBtn = document.getElementById("next");
 const scoreDiv = document.getElementById("score");
-const wrongDiv = document.getElementById("wrong"); // <-- new
+const wrongDiv = document.getElementById("wrong");
 const timerDiv = document.getElementById("timer");
 
 const categoryBtns = document.querySelectorAll(".category-btn");
 const randomBtn = document.getElementById("random-btn");
 
+// Fullscreen function
+function openFullscreen() {
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) {
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) {
+    elem.msRequestFullscreen();
+  }
+}
+
 // Category Button Logic
 categoryBtns.forEach(btn => {
   btn.addEventListener("click", () => {
-    categoryBtns.forEach(b=>b.classList.remove("active"));
+    openFullscreen(); // Fullscreen on category click
+    categoryBtns.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     const category = btn.dataset.category;
     startQuiz(category);
@@ -425,6 +438,7 @@ categoryBtns.forEach(btn => {
 
 // Random Question Button Logic
 randomBtn.addEventListener("click", () => {
+  openFullscreen(); // Fullscreen on random click
   categoryBtns.forEach(b => b.classList.remove("active"));
   const randomIndex = Math.floor(Math.random() * questionsDB.length);
   const q = questionsDB[randomIndex];
@@ -434,9 +448,9 @@ randomBtn.addEventListener("click", () => {
 // Start Quiz by Category
 function startQuiz(category) {
   score = 0;
-  wrongCount = 0; // reset wrong count when a new quiz starts
+  wrongCount = 0;
   scoreDiv.textContent = `Score: ${score}`;
-  wrongDiv.textContent = `Wrong: ${wrongCount}`; // update UI
+  wrongDiv.textContent = `Wrong: ${wrongCount}`;
   currentQuestion = getRandomQuestion(category);
   showQuestion(currentQuestion);
 }
@@ -448,7 +462,7 @@ function getRandomQuestion(category) {
   return filtered[randomIndex];
 }
 
-// Disable option buttons to avoid double clicks / double counting
+// Disable option buttons
 function disableOptions() {
   const btns = optionsDiv.querySelectorAll("button");
   btns.forEach(b => {
@@ -472,7 +486,7 @@ function showQuestion(q) {
   q.options.forEach(opt => {
     const button = document.createElement("button");
     button.textContent = opt;
-    button.className ="w-full py-3 px-4 rounded-full bg-white shadow-[0_0_15px_rgba(0,0,0,0.2)] text-gray-700 font-medium hover:bg-blue-100 transition";
+    button.className = "w-full py-3 px-4 rounded-full bg-white shadow-[0_0_15px_rgba(0,0,0,0.2)] text-gray-700 font-medium hover:bg-blue-100 transition";
     button.onclick = () => checkAnswer(opt, q);
     optionsDiv.appendChild(button);
   });
@@ -482,51 +496,49 @@ function showQuestion(q) {
     timerDiv.textContent = `Time: ${timeLeft}s`;
     if (timeLeft <= 0) {
       clearInterval(timer);
-      disableOptions(); // prevent further clicks
-      // count timeouts as wrong answers
+      disableOptions();
       wrongCount += 1;
       wrongDiv.textContent = `Wrong: ${wrongCount}`;
+      highlightCorrect(q);
       explanationDiv.textContent = `Time up! Correct Answer: ${q.answer}\nExplanation: ${q.explanation}`;
       nextBtn.style.display = "block";
     }
   }, 1000);
 }
 
-// Check Answer & Show Explanation
-// Check Answer & Show Explanation
-function checkAnswer(selected, q) {
-  clearInterval(timer);
-  disableOptions(); // make sure user can't click again
-
+// Highlight correct & selected options
+function highlightCorrect(q, selected = null) {
   const optionButtons = document.querySelectorAll("#options button");
-
   optionButtons.forEach(btn => {
     if (btn.textContent === q.answer) {
-      // ✅ Correct option green
       btn.classList.remove("bg-white", "hover:bg-blue-100", "text-gray-700");
       btn.classList.add("bg-green-500", "text-white");
     }
-
-    if (btn.textContent === selected && selected !== q.answer) {
-      // ❌ Wrong selected option red
+    if (selected && btn.textContent === selected && selected !== q.answer) {
       btn.classList.remove("bg-white", "hover:bg-blue-100", "text-gray-700");
       btn.classList.add("bg-red-500", "text-white");
     }
   });
+}
+
+// Check Answer & Show Explanation
+function checkAnswer(selected, q) {
+  clearInterval(timer);
+  disableOptions();
+  highlightCorrect(q, selected);
 
   if (selected === q.answer) {
     score += 1;
     explanationDiv.textContent = `Correct! ✅\nExplanation: ${q.explanation}`;
   } else {
-    wrongCount += 1; // increment wrong counter
+    wrongCount += 1;
     explanationDiv.textContent = `Wrong! ❌\nCorrect Answer: ${q.answer}\nExplanation: ${q.explanation}`;
   }
 
   scoreDiv.textContent = `Score: ${score}`;
-  wrongDiv.textContent = `Wrong: ${wrongCount}`; // update UI
+  wrongDiv.textContent = `Wrong: ${wrongCount}`;
   nextBtn.style.display = "block";
 }
-
 
 // Next Button Logic
 nextBtn.addEventListener("click", () => {
@@ -534,3 +546,4 @@ nextBtn.addEventListener("click", () => {
   currentQuestion = getRandomQuestion(category);
   showQuestion(currentQuestion);
 });
+
