@@ -565,14 +565,16 @@ function showShareButton() {
 
 shareBtn.addEventListener("click", () => {
   const totalQuestions = categoryQuestions.length; // Total questions in current quiz
-  const resultText = `🎯 Digital Electronics Quiz UPLT Result\n
-✅ Score: ${score}\n
-❌ Wrong: ${wrongCount}\n
-📊 Total Questions: ${totalQuestions}\n\n
+  const resultText = `🎯 Digital Electronics Quiz UPLT Result
+✅ Score: ${score}
+❌ Wrong: ${wrongCount}
+📊 Total Questions: ${totalQuestions}
+
 Try it yourself! https://uplt.netlify.app/`;
 
   window.open(`https://wa.me/?text=${encodeURIComponent(resultText)}`, "_blank");
 });
+
 
 
 // ===== Home Category Buttons =====
