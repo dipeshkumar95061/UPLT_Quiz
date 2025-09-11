@@ -399,15 +399,17 @@ const questionsDB = [
 let score = 0;
 let wrongCount = 0;
 let currentQuestion;
+let currentQuestionIndex = 0;
+let categoryQuestions = [];
 let timer;
 let timeLeft = 30;
-let isRandomMode = false; // Track if random mode is active
+let isRandomMode = false;
 
 // High Score Load on Start
 let highScore = localStorage.getItem("highScore") || 0;
 document.getElementById("highscore").textContent = `🔥 Highest Score: ${highScore}`;
 
-// Update High Score function
+// Update High Score
 function updateHighScore() {
   if (score > highScore) {
     highScore = score;
@@ -416,6 +418,7 @@ function updateHighScore() {
   }
 }
 
+// DOM Elements
 const questionDiv = document.getElementById("question");
 const optionsDiv = document.getElementById("options");
 const explanationDiv = document.getElementById("explanation");
@@ -423,67 +426,58 @@ const nextBtn = document.getElementById("next");
 const scoreDiv = document.getElementById("score");
 const wrongDiv = document.getElementById("wrong");
 const timerDiv = document.getElementById("timer");
+const shareBtn = document.getElementById("share-btn");
 
-const categoryBtns = document.querySelectorAll(".category-btn");
-const randomBtn = document.getElementById("random-btn");
-
-// Fullscreen function
+// ===== Fullscreen =====
 function openFullscreen() {
   const elem = document.documentElement;
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) {
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) {
-    elem.msRequestFullscreen();
-  }
+  if (elem.requestFullscreen) elem.requestFullscreen();
+  else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+  else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
 }
 
-// Start Quiz by Category
+// ===== Shuffle Helper =====
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ===== Start Quiz =====
 function startQuiz(category) {
   score = 0;
   wrongCount = 0;
+  currentQuestionIndex = 0;
   scoreDiv.textContent = `Score: ${score}`;
   wrongDiv.textContent = `Wrong: ${wrongCount}`;
-  currentQuestion = getRandomQuestion(category);
-  showQuestion(currentQuestion);
+
+  if (category === "Random") {
+    isRandomMode = true;
+    categoryQuestions = shuffleArray([...questionsDB]);
+  } else {
+    isRandomMode = false;
+    categoryQuestions = questionsDB.filter(q => q.category === category);
+  }
+
+  showQuestion(categoryQuestions[currentQuestionIndex]);
 }
 
-// Get Random Question by Category
-function getRandomQuestion(category) {
-  const filtered = questionsDB.filter(q => q.category === category);
-  const randomIndex = Math.floor(Math.random() * filtered.length);
-  return filtered[randomIndex];
-}
-
-// Disable option buttons
-function disableOptions() {
-  const btns = optionsDiv.querySelectorAll("button");
-  btns.forEach(b => {
-    b.disabled = true;
-    b.onclick = null;
-    b.classList.add("opacity-50", "cursor-not-allowed");
-  });
-}
-
-// Show Question & Options
+// ===== Show Question =====
 function showQuestion(q) {
   clearInterval(timer);
   timeLeft = 30;
   timerDiv.textContent = `Time: ${timeLeft}s`;
+
+  document.getElementById("question-number").textContent = `Q${currentQuestionIndex + 1}.`;
 
   questionDiv.textContent = q.question;
   optionsDiv.innerHTML = "";
   explanationDiv.textContent = "";
   nextBtn.style.display = "none";
 
-  // Shuffle options
-  const shuffledOptions = [...q.options];
-  for (let i = shuffledOptions.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
-  }
-
+  const shuffledOptions = shuffleArray([...q.options]);
   shuffledOptions.forEach(opt => {
     const button = document.createElement("button");
     button.textContent = opt;
@@ -499,7 +493,7 @@ function showQuestion(q) {
     if (timeLeft <= 0) {
       clearInterval(timer);
       disableOptions();
-      wrongCount += 1;
+      wrongCount++;
       wrongDiv.textContent = `Wrong: ${wrongCount}`;
       highlightCorrect(q);
       explanationDiv.textContent = `Time up! Correct Answer: ${q.answer}\nExplanation: ${q.explanation}`;
@@ -508,10 +502,18 @@ function showQuestion(q) {
   }, 1000);
 }
 
-// Highlight correct & selected options
+// ===== Disable Options =====
+function disableOptions() {
+  optionsDiv.querySelectorAll("button").forEach(b => {
+    b.disabled = true;
+    b.onclick = null;
+    b.classList.add("opacity-50", "cursor-not-allowed");
+  });
+}
+
+// ===== Highlight Correct / Wrong =====
 function highlightCorrect(q, selected = null) {
-  const optionButtons = document.querySelectorAll("#options button");
-  optionButtons.forEach(btn => {
+  optionsDiv.querySelectorAll("button").forEach(btn => {
     if (btn.textContent === q.answer) {
       btn.classList.remove("bg-white", "hover:bg-blue-100", "text-gray-700");
       btn.classList.add("bg-green-500", "text-white");
@@ -523,82 +525,75 @@ function highlightCorrect(q, selected = null) {
   });
 }
 
-// Check Answer
+// ===== Check Answer =====
 function checkAnswer(selected, q) {
   clearInterval(timer);
   disableOptions();
   highlightCorrect(q, selected);
 
   if (selected === q.answer) {
-    score += 1;
+    score++;
     explanationDiv.textContent = `Correct! ✅\nExplanation: ${q.explanation}`;
   } else {
-    wrongCount += 1;
+    wrongCount++;
     explanationDiv.textContent = `Wrong! ❌\nCorrect Answer: ${q.answer}\nExplanation: ${q.explanation}`;
   }
 
   scoreDiv.textContent = `Score: ${score}`;
   wrongDiv.textContent = `Wrong: ${wrongCount}`;
   nextBtn.style.display = "block";
-
   showShareButton();
   updateHighScore();
 }
 
-// Next Button
+// ===== Next Button =====
 nextBtn.addEventListener("click", () => {
-  if (isRandomMode) {
-    const randomIndex = Math.floor(Math.random() * questionsDB.length);
-    const q = questionsDB[randomIndex];
-    showQuestion(q);
+  currentQuestionIndex++;
+  if (currentQuestionIndex < categoryQuestions.length) {
+    showQuestion(categoryQuestions[currentQuestionIndex]);
   } else {
-    const category =
-      document.querySelector(".category-btn.active")?.dataset.category ||
-      questionsDB[0].category;
-    currentQuestion = getRandomQuestion(category);
-    showQuestion(currentQuestion);
+    alert(`Quiz Completed! Your Score: ${score}`);
+    document.getElementById("quiz-screen").classList.add("hidden");
+    document.getElementById("home-screen").classList.remove("hidden");
   }
 });
 
-const shareBtn = document.getElementById("share-btn");
+// ===== Share Button =====
 function showShareButton() {
   shareBtn.classList.remove("hidden");
 }
 
 shareBtn.addEventListener("click", () => {
-  const total = score + wrongCount;
+  const totalQuestions = categoryQuestions.length; // Total questions in current quiz
   const resultText = `🎯 Digital Electronics Quiz UPLT Result\n
-✅ Score: ${score}\n❌ Wrong: ${wrongCount}\n📊 Total Questions: ${total}\n\nTry it yourself! https://uplt.netlify.app/`;
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(resultText)}`;
-  window.open(whatsappUrl, "_blank");
+✅ Score: ${score}\n
+❌ Wrong: ${wrongCount}\n
+📊 Total Questions: ${totalQuestions}\n\n
+Try it yourself! https://uplt.netlify.app/`;
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(resultText)}`, "_blank");
 });
 
-// ===== Home category buttons =====
+
+// ===== Home Category Buttons =====
 document.querySelectorAll(".home-category").forEach(btn => {
   btn.addEventListener("click", () => {
-    openFullscreen(); // fullscreen on click
+    openFullscreen();
     const category = btn.dataset.category;
     const color = window.getComputedStyle(btn).backgroundColor;
 
-    // Hide home, show quiz
     document.getElementById("home-screen").classList.add("hidden");
     document.getElementById("quiz-screen").classList.remove("hidden");
 
-    // Set category name + color
     const selectedCategory = document.getElementById("selected-category");
     selectedCategory.textContent = category === "Random" ? "Random Mode" : category;
     selectedCategory.style.color = color;
 
-    if (category === "Random") {
-      const randomIndex = Math.floor(Math.random() * questionsDB.length);
-      showQuestion(questionsDB[randomIndex]);
-    } else {
-      startQuiz(category);
-    }
+    startQuiz(category);
   });
 });
 
-// ===== Side Navigation Toggle =====
+// ===== Side Navigation =====
 const menuBtn = document.getElementById("menu-btn");
 const sideNav = document.getElementById("side-nav");
 
@@ -606,15 +601,13 @@ menuBtn.addEventListener("click", () => {
   sideNav.classList.toggle("-translate-x-full");
 });
 
-// ===== Side Navigation Category Click =====
 document.querySelectorAll(".side-category").forEach(btn => {
   btn.addEventListener("click", () => {
-    openFullscreen(); // fullscreen on click
+    openFullscreen();
     const category = btn.dataset.category;
     const color = window.getComputedStyle(btn).backgroundColor;
 
     sideNav.classList.add("-translate-x-full");
-
     const selectedCategory = document.getElementById("selected-category");
     selectedCategory.textContent = category;
     selectedCategory.style.color = color;
@@ -623,7 +616,6 @@ document.querySelectorAll(".side-category").forEach(btn => {
   });
 });
 
-// ===== Random Button from Side Nav =====
 document.getElementById("random-btn").addEventListener("click", () => {
   openFullscreen();
   sideNav.classList.add("-translate-x-full");
@@ -632,7 +624,6 @@ document.getElementById("random-btn").addEventListener("click", () => {
   selectedCategory.textContent = "Random Mode";
   selectedCategory.style.color = "indigo";
 
-  const randomIndex = Math.floor(Math.random() * questionsDB.length);
-  showQuestion(questionsDB[randomIndex]);
+  startQuiz("Random");
 });
 
