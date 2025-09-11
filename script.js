@@ -450,15 +450,16 @@ function startQuiz(category) {
   score = 0;
   wrongCount = 0;
   currentQuestionIndex = 0;
+
   scoreDiv.textContent = `Score: ${score}`;
   wrongDiv.textContent = `Wrong: ${wrongCount}`;
 
   if (category === "Random") {
     isRandomMode = true;
-    categoryQuestions = shuffleArray([...questionsDB]);
+    categoryQuestions = shuffleArray([...questionsDB]); // Shuffle all questions
   } else {
     isRandomMode = false;
-    categoryQuestions = questionsDB.filter(q => q.category === category);
+    categoryQuestions = shuffleArray(questionsDB.filter(q => q.category === category)); // Shuffle category
   }
 
   showQuestion(categoryQuestions[currentQuestionIndex]);
@@ -470,6 +471,7 @@ function showQuestion(q) {
   timeLeft = 30;
   timerDiv.textContent = `Time: ${timeLeft}s`;
 
+  // Question number sequentially
   document.getElementById("question-number").textContent = `Q${currentQuestionIndex + 1}.`;
 
   questionDiv.textContent = q.question;
@@ -562,22 +564,17 @@ nextBtn.addEventListener("click", () => {
 function showShareButton() {
   shareBtn.classList.remove("hidden");
 }
-
 shareBtn.addEventListener("click", () => {
-  const total = score + wrongCount;
+  const totalQuestions = categoryQuestions.length;
   const resultText = `🎯 Digital Electronics Quiz UPLT Result
 ✅ Score: ${score}
 ❌ Wrong: ${wrongCount}
-📊 Total Questions: ${total}
+📊 Total Questions: ${totalQuestions}
 
 Try it yourself! https://uplt.netlify.app/`;
 
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(resultText)}`;
-  window.open(whatsappUrl, "_blank");
+  window.open(`https://wa.me/?text=${encodeURIComponent(resultText)}`, "_blank");
 });
-
-
-
 
 // ===== Home Category Buttons =====
 document.querySelectorAll(".home-category").forEach(btn => {
