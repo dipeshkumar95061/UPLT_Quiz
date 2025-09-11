@@ -404,6 +404,7 @@ let categoryQuestions = [];
 let timer;
 let timeLeft = 30;
 let isRandomMode = false;
+let selectedCategoryName = "";
 
 // High Score Load on Start
 let highScore = localStorage.getItem("highScore") || 0;
@@ -449,17 +450,33 @@ function shuffleArray(arr) {
 function startQuiz(category) {
   score = 0;
   wrongCount = 0;
-  currentQuestionIndex = 0;
+  selectedCategoryName = category;
 
   scoreDiv.textContent = `Score: ${score}`;
   wrongDiv.textContent = `Wrong: ${wrongCount}`;
 
   if (category === "Random") {
     isRandomMode = true;
-    categoryQuestions = shuffleArray([...questionsDB]); // Shuffle all questions
+    categoryQuestions = shuffleArray([...questionsDB]);
+
+    // --- Restore Progress for Random also ---
+    let savedIndex = localStorage.getItem("progress_Random");
+    if (savedIndex && savedIndex < categoryQuestions.length) {
+      currentQuestionIndex = parseInt(savedIndex);
+    } else {
+      currentQuestionIndex = 0;
+    }
+
   } else {
     isRandomMode = false;
-    categoryQuestions = shuffleArray(questionsDB.filter(q => q.category === category)); // Shuffle category
+    categoryQuestions = shuffleArray(questionsDB.filter(q => q.category === category));
+
+    let savedIndex = localStorage.getItem("progress_" + category);
+    if (savedIndex && savedIndex < categoryQuestions.length) {
+      currentQuestionIndex = parseInt(savedIndex);
+    } else {
+      currentQuestionIndex = 0;
+    }
   }
 
   showQuestion(categoryQuestions[currentQuestionIndex]);
@@ -472,7 +489,7 @@ function showQuestion(q) {
   timerDiv.textContent = `Time: ${timeLeft}s`;
 
   // Question number sequentially
-  document.getElementById("question-number").textContent = `Q${currentQuestionIndex + 1}.`;
+  document.getElementById("question-number").textContent = `Q${currentQuestionIndex + 1}/${categoryQuestions.length}`;
 
   questionDiv.textContent = q.question;
   optionsDiv.innerHTML = "";
@@ -551,10 +568,26 @@ function checkAnswer(selected, q) {
 // ===== Next Button =====
 nextBtn.addEventListener("click", () => {
   currentQuestionIndex++;
+
+  // --- Save Progress (Normal + Random) ---
+  if (isRandomMode) {
+    localStorage.setItem("progress_Random", currentQuestionIndex);
+  } else {
+    localStorage.setItem("progress_" + selectedCategoryName, currentQuestionIndex);
+  }
+
   if (currentQuestionIndex < categoryQuestions.length) {
     showQuestion(categoryQuestions[currentQuestionIndex]);
   } else {
     alert(`Quiz Completed! Your Score: ${score}`);
+
+    // Reset progress if finished
+    if (isRandomMode) {
+      localStorage.removeItem("progress_Random");
+    } else {
+      localStorage.removeItem("progress_" + selectedCategoryName);
+    }
+
     document.getElementById("quiz-screen").classList.add("hidden");
     document.getElementById("home-screen").classList.remove("hidden");
   }
@@ -565,11 +598,12 @@ function showShareButton() {
   shareBtn.classList.remove("hidden");
 }
 shareBtn.addEventListener("click", () => {
+  const total = score + wrongCount;
   const totalQuestions = categoryQuestions.length;
   const resultText = `🎯 Digital Electronics Quiz UPLT Result
 ✅ Score: ${score}
 ❌ Wrong: ${wrongCount}
-📊 Total Questions: ${totalQuestions}
+📊 Total Solved Questions: ${total}/${totalQuestions}
 
 Try it yourself! https://uplt.netlify.app/`;
 
