@@ -9,90 +9,80 @@ You can access the live application here: [UP LT Quiz](https://uplt.netlify.app/
 
 ---
 
-## Features
+## ✨ Features
 
-📚 Wide Range of Topics
+📚 **Wide Range of Topics**  
 Covers all key Digital Electronics concepts relevant to UPLT exams, including:
 
-Number Systems
+- Number Systems  
+- Boolean Algebra  
+- Logic Gates  
+- Simplification of Boolean Functions  
+- Combinational Circuits  
+- Sequential Circuits  
+- Memory Circuits  
 
-Boolean Algebra
-
-Logic Gates
-
-Simplification of Boolean Functions
-
-Combinational Circuits
-
-Sequential Circuits
-
-Memory Circuits
-
-🔀 Randomized Questions
+🔀 **Randomized Questions**  
 Each quiz session presents questions in a random order for better practice.
 
-❌ No Repetition
+❌ **No Repetition**  
 Once a question appears in a session, it won’t repeat again.
 
-📝 Multiple Choice Questions (MCQs)
+📝 **Multiple Choice Questions (MCQs)**  
 Every question has four options with one correct answer.
 
-💡 Answer Explanations
+💡 **Answer Explanations**  
 Learn instantly with a brief explanation after each question.
 
-🎯 Instant Feedback
+🎯 **Instant Feedback**  
 See whether your answer is correct or wrong immediately.
 
-🗂️ Category Selection
+🗂️ **Category Selection**  
 Choose from different topics/categories or play in Random Mode.
 
-🎲 Random Mode
+🎲 **Random Mode**  
 Play with all questions in a shuffled order, still showing sequential numbering.
 
-🔢 Sequential Question Numbering
+🔢 **Sequential Question Numbering**  
 Each question displays its number (e.g., Q5/20) – even in Random mode.
 
-⏳ Timer
+⏳ **Timer**  
 30-second countdown per question, auto-marks wrong if time runs out.
 
-📊 Score Tracking
+📊 **Score Tracking**  
 Live display of Correct (✅) and Wrong (❌) answers.
 
-🔥 High Score System
+🔥 **High Score System**  
 Stores your highest score locally using browser’s localStorage.
 
-💾 Progress Save & Resume
+💾 **Progress Save & Resume**  
+- Normal Categories → Saves progress as `progress_CategoryName`.  
+- Random Mode → Saves progress as `progress_Random`.  
+- Resume from where you left off, even after closing the browser.
 
-Normal Categories → Saves progress as progress_CategoryName.
-
-Random Mode → Saves progress as progress_Random.
-
-Resume from where you left off, even after closing the browser.
-
-🖼️ Explanation Panel
+🖼️ **Explanation Panel**  
 After answering, shows correct answer with explanation.
 
-➡️ Next Button
+➡️ **Next Button**  
 Move to the next question at your own pace.
 
-📤 Share Results
+📤 **Share Results**  
 Share your quiz results directly on WhatsApp with one click.
 
-📱 Responsive Design
+📱 **Responsive Design**  
 Works smoothly on desktop, tablet, and mobile devices.
 
-🖥️ Fullscreen Mode
+🖥️ **Fullscreen Mode**  
 Automatically enters fullscreen when the quiz starts for distraction-free learning.
 
-📌 Side Navigation
+📌 **Side Navigation**  
 Quick access to categories from a slide-out menu.
 
-🎨 Category Highlight
+🎨 **Category Highlight**  
 Selected category name is shown in its matching color at the top.
 
-🌐 Offline Support
+🌐 **Offline Support**  
 Since it’s pure HTML + CSS + JS, the quiz works even without internet after first load.
-
 ---
 
 ## Technologies Used
