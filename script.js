@@ -416,7 +416,6 @@ function updateHighScore() {
   }
 }
 
-
 const questionDiv = document.getElementById("question");
 const optionsDiv = document.getElementById("options");
 const explanationDiv = document.getElementById("explanation");
@@ -439,28 +438,6 @@ function openFullscreen() {
     elem.msRequestFullscreen();
   }
 }
-
-// Category Button Logic
-categoryBtns.forEach(btn => {
-  btn.addEventListener("click", () => {
-    openFullscreen(); // Fullscreen on category click
-    categoryBtns.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    const category = btn.dataset.category;
-    isRandomMode = false; // category mode
-    startQuiz(category);
-  });
-});
-
-// Random Question Button Logic
-randomBtn.addEventListener("click", () => {
-  openFullscreen(); 
-  categoryBtns.forEach(b => b.classList.remove("active"));
-  isRandomMode = true; // enable random mode
-  const randomIndex = Math.floor(Math.random() * questionsDB.length);
-  const q = questionsDB[randomIndex];
-  showQuestion(q);
-});
 
 // Start Quiz by Category
 function startQuiz(category) {
@@ -489,7 +466,7 @@ function disableOptions() {
   });
 }
 
-// Show Question & Options with random shuffle
+// Show Question & Options
 function showQuestion(q) {
   clearInterval(timer);
   timeLeft = 30;
@@ -500,7 +477,7 @@ function showQuestion(q) {
   explanationDiv.textContent = "";
   nextBtn.style.display = "none";
 
-  // Shuffle options randomly
+  // Shuffle options
   const shuffledOptions = [...q.options];
   for (let i = shuffledOptions.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -510,7 +487,8 @@ function showQuestion(q) {
   shuffledOptions.forEach(opt => {
     const button = document.createElement("button");
     button.textContent = opt;
-    button.className = "w-full py-3 px-4 rounded-full bg-white shadow-[0_0_15px_rgba(0,0,0,0.2)] text-gray-700 font-medium hover:bg-blue-100 transition";
+    button.className =
+      "w-full py-3 px-4 rounded-full bg-white shadow-[0_0_15px_rgba(0,0,0,0.2)] text-gray-700 font-medium hover:bg-blue-100 transition";
     button.onclick = () => checkAnswer(opt, q);
     optionsDiv.appendChild(button);
   });
@@ -545,7 +523,7 @@ function highlightCorrect(q, selected = null) {
   });
 }
 
-// Check Answer & Show Explanation
+// Check Answer
 function checkAnswer(selected, q) {
   clearInterval(timer);
   disableOptions();
@@ -562,56 +540,99 @@ function checkAnswer(selected, q) {
   scoreDiv.textContent = `Score: ${score}`;
   wrongDiv.textContent = `Wrong: ${wrongCount}`;
   nextBtn.style.display = "block";
-  
-   showShareButton();
-   updateHighScore();
 
+  showShareButton();
+  updateHighScore();
 }
 
-// Next Button Logic
+// Next Button
 nextBtn.addEventListener("click", () => {
   if (isRandomMode) {
-    // Random mode: always pick random question
     const randomIndex = Math.floor(Math.random() * questionsDB.length);
     const q = questionsDB[randomIndex];
     showQuestion(q);
   } else {
-    // Category mode: pick random question from that category
-    const category = document.querySelector(".category-btn.active")?.dataset.category || questionsDB[0].category;
+    const category =
+      document.querySelector(".category-btn.active")?.dataset.category ||
+      questionsDB[0].category;
     currentQuestion = getRandomQuestion(category);
     showQuestion(currentQuestion);
   }
 });
 
 const shareBtn = document.getElementById("share-btn");
-
-// Show share button when quiz ends or user wants to share
 function showShareButton() {
   shareBtn.classList.remove("hidden");
 }
 
-// Share Result Logic
 shareBtn.addEventListener("click", () => {
   const total = score + wrongCount;
   const resultText = `🎯 Digital Electronics Quiz UPLT Result\n
 ✅ Score: ${score}\n❌ Wrong: ${wrongCount}\n📊 Total Questions: ${total}\n\nTry it yourself! https://uplt.netlify.app/`;
-
-  // WhatsApp share
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(resultText)}`;
-
-  // Twitter share
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(resultText)}`;
-
-  // Open option for user
-  const choice = confirm("Do you want to share on WhatsApp? (Cancel = Twitter)");
-  if (choice) {
-    window.open(whatsappUrl, "_blank");
-  } else {
-    window.open(twitterUrl, "_blank");
-  }
+  window.open(whatsappUrl, "_blank");
 });
 
+// ===== Home category buttons =====
+document.querySelectorAll(".home-category").forEach(btn => {
+  btn.addEventListener("click", () => {
+    openFullscreen(); // fullscreen on click
+    const category = btn.dataset.category;
+    const color = window.getComputedStyle(btn).backgroundColor;
 
+    // Hide home, show quiz
+    document.getElementById("home-screen").classList.add("hidden");
+    document.getElementById("quiz-screen").classList.remove("hidden");
 
+    // Set category name + color
+    const selectedCategory = document.getElementById("selected-category");
+    selectedCategory.textContent = category === "Random" ? "Random Mode" : category;
+    selectedCategory.style.color = color;
 
+    if (category === "Random") {
+      const randomIndex = Math.floor(Math.random() * questionsDB.length);
+      showQuestion(questionsDB[randomIndex]);
+    } else {
+      startQuiz(category);
+    }
+  });
+});
+
+// ===== Side Navigation Toggle =====
+const menuBtn = document.getElementById("menu-btn");
+const sideNav = document.getElementById("side-nav");
+
+menuBtn.addEventListener("click", () => {
+  sideNav.classList.toggle("-translate-x-full");
+});
+
+// ===== Side Navigation Category Click =====
+document.querySelectorAll(".side-category").forEach(btn => {
+  btn.addEventListener("click", () => {
+    openFullscreen(); // fullscreen on click
+    const category = btn.dataset.category;
+    const color = window.getComputedStyle(btn).backgroundColor;
+
+    sideNav.classList.add("-translate-x-full");
+
+    const selectedCategory = document.getElementById("selected-category");
+    selectedCategory.textContent = category;
+    selectedCategory.style.color = color;
+
+    startQuiz(category);
+  });
+});
+
+// ===== Random Button from Side Nav =====
+document.getElementById("random-btn").addEventListener("click", () => {
+  openFullscreen();
+  sideNav.classList.add("-translate-x-full");
+
+  const selectedCategory = document.getElementById("selected-category");
+  selectedCategory.textContent = "Random Mode";
+  selectedCategory.style.color = "indigo";
+
+  const randomIndex = Math.floor(Math.random() * questionsDB.length);
+  showQuestion(questionsDB[randomIndex]);
+});
 

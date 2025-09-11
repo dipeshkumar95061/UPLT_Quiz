@@ -9,18 +9,63 @@
 </head>
 <body class="bg-gradient-to-r from-purple-200 via-pink-100 to-blue-200 min-h-screen flex items-center justify-center font-sans">
 
-  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-3xl w-full mx-4">
+  <!-- Home Screen -->
+  <div id="home-screen" class="bg-white rounded-2xl shadow-2xl p-8 max-w-3xl w-full mx-4 text-center">
     <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Digital Electronics Quiz UPLT</h1>
 
-    <!-- Category Filter -->
+    <!-- Category Buttons -->
     <div class="flex flex-wrap justify-center gap-3 mb-6">
-      <button class="category-btn bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition" data-category="Number Systems">Number Systems</button>
-      <button class="category-btn bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition" data-category="Boolean Algebra">Boolean Algebra</button>
-      <button class="category-btn bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg transition" data-category="Logic Gates">Logic Gates</button>
-      <button class="category-btn bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition" data-category="Combinational Circuits">Combinational</button>
-      <button class="category-btn bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition" data-category="Sequential Circuits">Sequential</button>
-      <button class="category-btn bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition" data-category="Memory Circuits">Memory</button>
-      <button id="random-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition">Random Question</button>
+      <button class="home-category bg-blue-500 text-white py-2 px-4 rounded-lg" data-category="Number Systems">Number Systems</button>
+      <button class="home-category bg-green-500 text-white py-2 px-4 rounded-lg" data-category="Boolean Algebra">Boolean Algebra</button>
+      <button class="home-category bg-purple-500 text-white py-2 px-4 rounded-lg" data-category="Logic Gates">Logic Gates</button>
+      <button class="home-category bg-orange-500 text-white py-2 px-4 rounded-lg" data-category="Combinational Circuits">Combinational</button>
+      <button class="home-category bg-red-500 text-white py-2 px-4 rounded-lg" data-category="Sequential Circuits">Sequential</button>
+      <button class="home-category bg-pink-500 text-white py-2 px-4 rounded-lg" data-category="Memory Circuits">Memory</button>
+      <button class="home-category bg-indigo-500 text-white py-2 px-4 rounded-lg" data-category="Random">Random Question</button>
+    </div>
+
+    <div class="flex justify-between mb-4">
+      <div id="home-score" class="font-bold text-gray-700">Score: 0</div>
+      <div id="home-wrong" class="font-bold text-red-600">Wrong: 0</div>
+      <div id="home-timer" class="font-bold text-gray-700">Time: 30s</div>
+    </div>
+
+    <div id="home-highscore" class="text-lg font-bold text-purple-600 mt-2">🔥 Highest Score: 0</div>
+  </div>
+
+
+  <!-- Quiz Screen (Hidden initially) -->
+  <div id="quiz-screen" class="bg-white rounded-2xl shadow-2xl p-8 max-w-3xl w-full mx-4 relative hidden">
+    
+    <!-- Top Heading -->
+    <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">
+      Digital Electronics Quiz UPLT
+    </h1>
+
+    <!-- Top Bar -->
+    <div class="flex items-center justify-between mb-6">
+      <!-- Navigation Icon -->
+      <button id="menu-btn" class="text-2xl text-gray-700 hover:text-gray-900">&#8942;</button>
+      
+      <!-- Selected Category (center me show hoga) -->
+      <h2 id="selected-category" class="flex-1 text-center text-xl font-bold text-gray-800">Category</h2>
+      
+      <!-- Dummy div (takki text center ho balance ke liye) -->
+      <div class="w-6"></div>
+    </div>
+
+    <!-- Side Navigation -->
+    <div id="side-nav" class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
+      <div class="p-4 border-b text-lg font-bold text-gray-700">Categories</div>
+      <div class="flex flex-col p-4 gap-3">
+        <button class="side-category bg-blue-500 text-white py-2 px-4 rounded-lg" data-category="Number Systems">Number Systems</button>
+        <button class="side-category bg-green-500 text-white py-2 px-4 rounded-lg" data-category="Boolean Algebra">Boolean Algebra</button>
+        <button class="side-category bg-purple-500 text-white py-2 px-4 rounded-lg" data-category="Logic Gates">Logic Gates</button>
+        <button class="side-category bg-orange-500 text-white py-2 px-4 rounded-lg" data-category="Combinational Circuits">Combinational</button>
+        <button class="side-category bg-red-500 text-white py-2 px-4 rounded-lg" data-category="Sequential Circuits">Sequential</button>
+        <button class="side-category bg-pink-500 text-white py-2 px-4 rounded-lg" data-category="Memory Circuits">Memory</button>
+        <button id="random-btn" class="bg-indigo-500 text-white py-2 px-4 rounded-lg">Random Question</button>
+      </div>
     </div>
 
     <!-- Quiz Area -->
@@ -29,27 +74,17 @@
         <div id="score" class="font-bold text-gray-700">Score: 0</div>
         <div id="wrong" class="font-bold text-red-600">Wrong: 0</div>
         <div id="timer" class="font-bold text-gray-700">Time: 30s</div>
-        
-
       </div>
 
       <div id="question" class="text-lg font-medium text-gray-800 mb-4"></div>
-
-      <!-- Options Placeholder -->
-    <div id="options" class="flex flex-col gap-3 mb-4">
-  
-</div>
-
+      <div id="options" class="flex flex-col gap-3 mb-4"></div>
 
       <button id="next" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-lg transition mb-4 hidden">Next Question</button>
 
       <div id="highscore" class="text-lg font-bold text-purple-600 mt-2"></div>
-      
       <button id="share-btn" class="hidden mt-3 py-2 px-4 rounded-full bg-green-500 text-white font-medium hover:bg-green-600 transition">
-  📤 Share Result
-</button>
-
-
+        📤 Share Result
+      </button>
       <div id="explanation" class="bg-gray-100 p-4 rounded-lg min-h-[60px] text-gray-700"></div>
     </div>
   </div>
