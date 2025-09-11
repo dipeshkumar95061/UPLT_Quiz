@@ -564,16 +564,18 @@ function showShareButton() {
 }
 
 shareBtn.addEventListener("click", () => {
-  const totalQuestions = categoryQuestions.length; // Total questions in current quiz
+  const total = score + wrongCount;
   const resultText = `🎯 Digital Electronics Quiz UPLT Result
 ✅ Score: ${score}
 ❌ Wrong: ${wrongCount}
-📊 Total Questions: ${totalQuestions}
+📊 Total Questions: ${total}
 
 Try it yourself! https://uplt.netlify.app/`;
 
-  window.open(`https://wa.me/?text=${encodeURIComponent(resultText)}`, "_blank");
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(resultText)}`;
+  window.open(whatsappUrl, "_blank");
 });
+
 
 
 
