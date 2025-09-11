@@ -2,7 +2,10 @@
 
 Welcome to the **UP LT Quiz Application**! This web-based application is designed to help students prepare for UP LT (Uttar Pradesh Level Test) exams by practicing questions on various digital electronics topics including Number Systems, Boolean Algebra, Logic Gates, Combinational Circuits, Sequential Circuits, and Memory Circuits.
 
-You can access the live application here: [UP LT Quiz]([https://uplt.netlify.app/](https://uplt.netlify.app/)
+---
+## Demo
+
+You can access the live application here: [UP LT Quiz](https://uplt.netlify.app/)
 
 ---
 
@@ -14,7 +17,17 @@ You can access the live application here: [UP LT Quiz]([https://uplt.netlify.app
 - **Answer Explanations**: Learn why an answer is correct with a brief explanation.
 - **User-Friendly Interface**: Clean and simple interface for smooth quiz experience.
 - **Instant Feedback**: See correct answers and explanations after each question.
-
+- **Category Selection:** Choose from different topics like Number Systems, Boolean Algebra, Logic Gates, etc.
+- **Random Mode:** Play with all questions in a shuffled, random order without repetition.
+- **Sequential Question Numbering:** Each question displays its number, even in random mode.
+- **Timer:** 30-second countdown per question.
+- **Score Tracking:** Correct and wrong answers are tracked live.
+- **High Score:** Stores your highest score in browser localStorage.
+- **Explanation:** After answering, view the explanation for each question.
+- **Next Button:** Navigate to the next question.
+- **Share Result:** Share your quiz results on WhatsApp directly.
+- **Responsive Design:** Works on desktop and mobile devices.
+- **Fullscreen Mode:** Automatically opens in fullscreen when quiz starts.
 ---
 
 ## Technologies Used
