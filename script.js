@@ -662,3 +662,24 @@ document.getElementById("random-btn").addEventListener("click", () => {
   startQuiz("Random");
 });
 
+// ===== Dark / Light Mode Toggle =====
+const toggleBtn = document.getElementById("dark-toggle");
+const html = document.documentElement;
+
+// Default text set karna (page load hone pe check)
+if (html.classList.contains("dark")) {
+  toggleBtn.textContent = "Light Mode";   // agar default dark ho toh Light Mode dikhaye
+} else {
+  toggleBtn.textContent = "Night Mode";   // agar default light ho toh Night Mode dikhaye
+}
+
+toggleBtn.addEventListener("click", () => {
+  html.classList.toggle("dark");
+
+  if (html.classList.contains("dark")) {
+    toggleBtn.textContent = "Light Mode";  // dark mode active → button "Light Mode"
+  } else {
+    toggleBtn.textContent = "Night Mode";  // light mode active → button "Night Mode"
+  }
+});
+

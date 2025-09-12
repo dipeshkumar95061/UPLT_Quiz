@@ -1,17 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" > <!-- yaha class dark lagane se default dark mode hoga (remove if you want default light) -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Electronics Quiz UPLT</title>
   <script src="script.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind dark mode enable
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
 </head>
-<body class="bg-gradient-to-r from-purple-200 via-pink-100 to-blue-200 min-h-screen flex items-center justify-center font-sans">
+<body class="bg-gradient-to-r from-purple-200 via-pink-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen flex items-center justify-center font-sans transition-colors duration-500">
+
+  <!-- Dark Mode Toggle -->
+  <button id="dark-toggle" class="absolute top-4 right-4 bg-gray-800 dark:bg-yellow-400 text-white dark:text-black px-4 py-2 rounded-lg shadow-md">
+    Relax Mode
+  </button>
 
   <!-- Home Screen -->
-  <div id="home-screen" class="bg-white rounded-2xl shadow-2xl p-8 max-w-3xl w-full mx-4 text-center">
-    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Digital Electronics Quiz UPLT</h1>
+  <div id="home-screen" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-3xl w-full mx-4 text-center transition-colors duration-500">
+    <h1 class="text-3xl font-bold text-center mb-6 text-gray-800 dark:text-gray-200">Digital Electronics Quiz UPLT</h1>
 
     <!-- Category Buttons -->
     <div class="flex flex-wrap justify-center gap-3 mb-6">
@@ -25,37 +36,37 @@
     </div>
 
     <div class="flex justify-between mb-4">
-      <div id="home-score" class="font-bold text-gray-700">Score: 0</div>
+      <div id="home-score" class="font-bold text-gray-700 dark:text-gray-200">Score: 0</div>
       <div id="home-wrong" class="font-bold text-red-600">Wrong: 0</div>
-      <div id="home-timer" class="font-bold text-gray-700">Time: 30s</div>
+      <div id="home-timer" class="font-bold text-gray-700 dark:text-gray-200">Time: 30s</div>
     </div>
 
-    <div id="home-highscore" class="text-lg font-bold text-purple-600 mt-2">🔥 Highest Score: 0</div>
+    <div id="home-highscore" class="text-lg font-bold text-purple-600 dark:text-purple-400 mt-2">🔥 Highest Score: 0</div>
   </div>
 
   <!-- Quiz Screen (Hidden initially) -->
-  <div id="quiz-screen" class="bg-white rounded-2xl shadow-2xl p-8 max-w-3xl w-full mx-4 relative hidden">
+  <div id="quiz-screen" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-3xl w-full mx-4 relative hidden transition-colors duration-500">
     
     <!-- Top Heading -->
-    <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">
+    <h1 class="text-2xl font-bold text-center mb-4 text-gray-800 dark:text-gray-200">
       Digital Electronics Quiz UPLT
     </h1>
 
     <!-- Top Bar -->
     <div class="flex items-center justify-between mb-6">
       <!-- Navigation Icon -->
-      <button id="menu-btn" class="text-2xl text-gray-700 hover:text-gray-900">&#8942;</button>
+      <button id="menu-btn" class="text-2xl text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">&#8942;</button>
       
       <!-- Selected Category -->
-      <h2 id="selected-category" class="flex-1 text-center text-xl font-bold text-gray-800">Category</h2>
+      <h2 id="selected-category" class="flex-1 text-center text-xl font-bold text-gray-800 dark:text-gray-200">Category</h2>
       
       <!-- Dummy div for balance -->
       <div class="w-6"></div>
     </div>
 
     <!-- Side Navigation -->
-    <div id="side-nav" class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
-      <div class="p-4 border-b text-lg font-bold text-gray-700">Categories</div>
+    <div id="side-nav" class="fixed top-0 left-0 w-64 h-full bg-white dark:bg-gray-900 shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
+      <div class="p-4 border-b text-lg font-bold text-gray-700 dark:text-gray-200">Categories</div>
       <div class="flex flex-col p-4 gap-3">
         <button class="side-category bg-blue-500 text-white py-2 px-4 rounded-lg" data-category="Number Systems">Number Systems</button>
         <button class="side-category bg-green-500 text-white py-2 px-4 rounded-lg" data-category="Boolean Algebra">Boolean Algebra</button>
@@ -70,21 +81,21 @@
     <!-- Quiz Area -->
     <div id="quiz-area" class="text-center">
       <div class="flex justify-between mb-4">
-        <div id="score" class="font-bold text-gray-700">Score: 0</div>
+        <div id="score" class="font-bold text-gray-700 dark:text-gray-200">Score: 0</div>
         <div id="wrong" class="font-bold text-red-600">Wrong: 0</div>
-        <div id="timer" class="font-bold text-gray-700">Time: 30s</div>
+        <div id="timer" class="font-bold text-gray-700 dark:text-gray-200">Time: 30s</div>
       </div>
 
       <!-- Question Section with Question Number -->
       <div class="flex items-center mb-2 justify-center">
         <!-- Question Number -->
-        <div id="question-number" class="text-lg font-bold text-blue-600 mr-3"></div>
+        <div id="question-number" class="text-lg font-bold text-blue-600 dark:text-blue-400 mr-3"></div>
         <!-- Actual Question -->
-        <div id="question" class="text-lg font-medium text-gray-800"></div>
+        <div id="question" class="text-lg font-medium text-gray-800 dark:text-gray-200"></div>
       </div>
 
       <!-- Total Question Info -->
-      <div id="question-total" class="text-sm font-semibold text-gray-600 mb-4"></div>
+      <div id="question-total" class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-4"></div>
 
       <!-- Options -->
       <div id="options" class="flex flex-col gap-3 mb-4"></div>
@@ -93,7 +104,7 @@
       <button id="next" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-lg transition mb-4 hidden">Next Question</button>
 
       <!-- Highscore -->
-      <div id="highscore" class="text-lg font-bold text-purple-600 mt-2"></div>
+      <div id="highscore" class="text-lg font-bold text-purple-600 dark:text-purple-400 mt-2"></div>
 
       <!-- Share Button -->
       <button id="share-btn" class="hidden mt-3 py-2 px-4 rounded-full bg-green-500 text-white font-medium hover:bg-green-600 transition">
@@ -101,9 +112,11 @@
       </button>
 
       <!-- Explanation -->
-      <div id="explanation" class="bg-gray-100 p-4 rounded-lg min-h-[60px] text-gray-700"></div>
+      <div id="explanation" class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg min-h-[60px] text-gray-700 dark:text-gray-200"></div>
     </div>
   </div>
+
+  
 
 </body>
 </html>
