@@ -81,6 +81,9 @@ Quick access to categories from a slide-out menu.
 🎨 **Category Highlight**  
 Selected category name is shown in its matching color at the top.
 
+🌗 **Light / Dark Mode**  
+Easily switch between Light Mode (bright background with dark text) and Dark Mode (dark background with light text) using a toggle button.
+    
 🌐 **Offline Support**     
 Since it’s pure HTML + CSS + JS, the quiz works even without internet after first load.
 
