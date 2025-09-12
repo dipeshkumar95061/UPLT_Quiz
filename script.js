@@ -171,7 +171,7 @@ const questionsDB = [
 { category: "Boolean Algebra", question: "Simplify: F = (A + B)(A' + C) + AB", options: ["AC + AB", "A + B + C", "AB + AC + BC", "1"], answer: "AC + AB", explanation: "Distributive law and absorption applied" },
 { category: "Boolean Algebra", question: "Simplify: F = (A + B)(B + C')(A + C')", options: ["AB + AC'", "A + B + C", "AC + B'", "1"], answer: "AC + B'", explanation: "Simplify using distributive and absorption laws" },
 { category: "Boolean Algebra", question: "Simplify: F = (A + B')(A' + C)(B + C')", options: ["AC + B'C'", "AB + AC", "A + B + C", "1"], answer: "AC + B'C'", explanation: "Distributive and absorption laws applied" },
-{ category: "Boolean Algebra", question: "Simplify: F = (A ⊕ B)(A ⊕ B')", options: ["A", "B", "1", "0"], answer: "0", explanation: "XOR with complement yields 0" }
+{ category: "Boolean Algebra", question: "Simplify: F = (A ⊕ B)(A ⊕ B')", options: ["A", "B", "1", "0"], answer: "0", explanation: "XOR with complement yields 0" },
 
 
   // Logic Gates
